@@ -15,7 +15,10 @@ Kubernetes Engine provides support for OIDC Discovery, enabling you to build app
 
 At a high level, when you enable OIDC Discovery for a cluster, the application's service account token is authenticated and (if valid) exchanged for an access token. The access token is then used to authenticate the application with the API on the external cloud provider."
 
-First thing to acknowledge is that we will need to prepare an OKE cluster with OIDC Discovery enabled and GCP project with resources. Lets see how to do this step by step.
+First thing to acknowledge is that we will need to prepare an OKE cluster with OIDC Discovery enabled and a GCP project with resources to be accessed by workloads in OKE. Lets see how to do this step by step.
+
+
+## Prepare OKE to support OIDC Discovery
 
 In the OKE Documentation you can see how to create a cluster with OIDC Discovery enabled. But you can also provision a cluster without it and update it once is provisioned. 
 
@@ -54,6 +57,10 @@ You should see something like the image below:
 <img width="1557" height="370" alt="image" src="https://github.com/user-attachments/assets/fa219535-901a-481f-93c1-f03fd59be68c" />
 
 retain the **open-id-connect-discovery-endpoint** . We will need it later.
+
+Documentation: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengOpenIDConnect-Discovery.htm
+
+
 
 
 
