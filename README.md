@@ -18,9 +18,9 @@ At a high level, when you enable OIDC Discovery for a cluster, the application's
 First thing to acknowledge is that we will need to prepare an OKE cluster with OIDC Discovery enabled and a GCP project with resources to be accessed by workloads in OKE. Lets see how to do this s[...]
 
 
-## 1. Prepare OKE to support OIDC Discovery
+# 1. Prepare OKE to support OIDC Discovery
 
-- 1.1 - In the OKE Documentation you can see how to create a cluster with OIDC Discovery enabled. But you can also provision a cluster without it and update it once is provisioned. 
+## 1.1 - In the OKE Documentation you can see how to create a cluster with OIDC Discovery enabled. But you can also provision a cluster without it and update it once is provisioned. 
 
 Like this if you want to do it in the console:
 
@@ -64,24 +64,24 @@ Documentation: [OpenID Connect Discovery - Oracle Cloud Infrastructure Docs](htt
 
 
 
-- 1.2 - Create a namespace and a service account for the OKE workloads:
+## 1.2 - Create a namespace and a service account for the OKE workloads:
 
 ```
 kubectl create ns oke-gcp-ns;
 kubectl -n oke-gcp-ns create sa oke-gcp-sa;
 ```
 
-## 2 - Prepare GCP resources
+# 2 - Prepare GCP resources
 
 We will try to run the commands with GCP CLI, but you can always try to do it in the console as well:
 
-1. GCP recommends to use a dedicated project to manage workload identity pools and providers, so lets create a GCP project :
+## 1. GCP recommends to use a dedicated project to manage workload identity pools and providers, so lets create a GCP project :
 
 ```
    gcloud projects create oke-oidc-gcp;
 ```
 
-2. Enable the IAM, Resource Manager, Service Account Credentials, and Security Token Service APIs.
+## 2. Enable the IAM, Resource Manager, Service Account Credentials, and Security Token Service APIs.
 
    Dont forget verifing that billing is enabled for your oke-oidc-gcp Google Cloud project.
 
@@ -99,7 +99,7 @@ gcloud billing projects describe oke-oidc-gcp
 
 
 
-3.  Enable APIs for your project
+## 3.  Enable APIs for your project
 
    Make sure that the following APIs are enabled:
    
@@ -112,9 +112,9 @@ gcloud billing projects describe oke-oidc-gcp
 gcloud services enable iam.googleapis.com cloudresourcemanager.googleapis.com iamcredentials.googleapis.com sts.googleapis.com
 ```
 
-4. Configure Workload Identity Federation
+## 4. Configure Workload Identity Federation
 
- - Create workload identity pool
+### - Create workload identity pool
 
 ```
 gcloud iam workload-identity-pools create "oke-pool" \
@@ -123,7 +123,7 @@ gcloud iam workload-identity-pools create "oke-pool" \
 ```
 
 
-- Create identity provider
+### - Create identity provider
 
 ```
 gcloud iam workload-identity-pools providers create-oidc "oke-provider" \
@@ -133,7 +133,7 @@ gcloud iam workload-identity-pools providers create-oidc "oke-provider" \
   --attribute-mapping="google.subject=assertion.sub"
 ```
 
-- Create Service Account
+### - Create Service Account
 
 ```
 gcloud iam service-accounts create oke-workload-sa \
@@ -141,13 +141,18 @@ gcloud iam service-accounts create oke-workload-sa \
   --display-name="OKE Workload Service Account"
 ```
 
-The following command grants the service account named oke-workload-sa the Storage Object Admin role on the entire oke-oidc-gcp project. We should be able to create buckets and push data into the buckets:
+### - Objective Viewer role for Service Account
+
+The following command grants the service account named oke-workload-sa the Storage Object Viewer role on the entire oke-oidc-gcp project.
+We should be able to view buckets and list their files:
 
 ```
   gcloud projects add-iam-policy-binding projects/oke-oidc-gcp \
   --member="serviceAccount:oke-workload-sa@oke-oidc-gcp.iam.gserviceaccount.com" \
-  --role="roles/storage.objectAdmin"
+  --role="roles/storage.objectViewer"
 ```
+
+### - workloadIdentityUser role for Service Account
 
 This command grants a specific Kubernetes service account (created in point 1.2 and identified by its unique Workload Identity Pool member string) the permission to impersonate a particular Google Cloud service account ( oke-workload-sa@oke-oidc-gcp.iam.gserviceaccount.com ). The role granted, roles/iam.workloadIdentityUser , is specifically designed for this impersonation, allowing applications running in the Kubernetes cluster using the oke-gcp-sa service account,) to effectively "act as" the Google Cloud service account and access Google Cloud resources based on the Google Cloud service account's permissions, without needing traditional service account keys. 
 
@@ -159,7 +164,7 @@ gcloud iam service-accounts add-iam-policy-binding \
   --condition=None
 ```
 
-
+### - create a credential configuration file
 
 Now, to deploy a Kubernetes workload that can access Google Cloud resources , we need to create a credential configuration file:
 
@@ -173,12 +178,18 @@ gcloud iam workload-identity-pools create-cred-config \
     --output-file=credential-configuration.json
 ```
 
+### - create a bucket with a file inside
+
 Now, lets create some resources in GCP:
 
 ```
 gcloud storage buckets create gs://oke-gcp-bucket ;
 echo "File Content" | gcloud storage cp - gs://oke-gcp-bucket/file.txt ;
 ```
+
+# 3 - Testing
+
+## - create the GCP credential configuration file, as a config map
 
 Return to OKE and lets create the GCP credential configuration file, as a config map in our namespace oke-gcp-ns:
 
@@ -188,6 +199,7 @@ kubectl create configmap gcp-credential-configuration \
   --namespace oke-gcp-ns
 ```
 
+## - creating the pod to test
 
 The following pod will use the  ServiceAccount oke-gcp-sa and ConfigMap gcp-credential-configuration to authenticate to Google Cloud:
 
