@@ -100,14 +100,12 @@ gcloud billing projects describe oke-oidc-gcp
 
 3.  Enable APIs for your project
 
-   In the console make sure that the following APIs are enabled:
+   Make sure that the following APIs are enabled:
    
    - Identity and Access Management (IAM) API
    - Cloud Resource Manager API
    - IAM Service Account Credentials API
    - Security Token Service API 
-
-Or with gcloud:
 
 ```
 gcloud services enable iam.googleapis.com cloudresourcemanager.googleapis.com iamcredentials.googleapis.com sts.googleapis.com
