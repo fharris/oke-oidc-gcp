@@ -66,12 +66,35 @@ Documentation: [OpenID Connect Discovery - Oracle Cloud Infrastructure Docs](htt
 
 ## 2 - Prepare GCP resources
 
-1. Create a GCP project
+We will try to run the commands with GCP CLI, but you can always try to do it in the console as well:
+
+1. GCP recommends to use a dedicated project to manage workload identity pools and providers, so lets create a GCP project with GCP Shell:
 
 ```
    gcloud projects create oke-oidc-gcp;
    gcloud projects create oke-oidc-gcp;
 ```
+
+2. Enable the IAM, Resource Manager, Service Account Credentials, and Security Token Service APIs.
+
+   Dont forget verifing that billing is enabled for your oke-oidc-gcp Google Cloud project.
+
+You can do it with gcloud
+```
+   gcloud billing projects link oke-oidc-gcp --billing-account=MY-BILLING-ACCOUNT-ID
+
+```
+or in the console. Once done you can validate it:
+
+```
+gcloud billing projects describe oke-oidc-gcp
+```
+
+<img width="714" height="105" alt="image" src="https://github.com/user-attachments/assets/5ab96d3c-6841-458d-aada-6d9307c63936" />
+
+  
+
+4. 
    
 
 
