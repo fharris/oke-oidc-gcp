@@ -90,11 +90,32 @@ or in the console. Once done you can validate it:
 gcloud billing projects describe oke-oidc-gcp
 ```
 
-<img width="714" height="105" alt="image" src="https://github.com/user-attachments/assets/5ab96d3c-6841-458d-aada-6d9307c63936" />
+<img width="738" height="102" alt="image" src="https://github.com/user-attachments/assets/5d3baae7-79ec-4182-a8ad-9f41c73a488a" />
 
-  
 
-4. 
+
+3.  Enable APIs for your project
+
+   In the console make sure that the following APIs are enabled:
    
+   - Identity and Access Management (IAM) API
+   - Cloud Resource Manager API
+   - IAM Service Account Credentials API
+   - Security Token Service API 
 
+Or with gcloud:
+
+```
+gcloud services enable iam.googleapis.com cloudresourcemanager.googleapis.com iamcredentials.googleapis.com sts.googleapis.com
+```
+
+4. Configure Workload Identity Federation
+
+# Create workload identity pool
+
+```
+gcloud iam workload-identity-pools create "oke-pool" \
+  --location="global" \
+  --description="Pool for OKE workloads"
+```
 
