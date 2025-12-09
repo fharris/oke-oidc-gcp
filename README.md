@@ -43,7 +43,7 @@ and run the following command:
 oci ce cluster update --cluster-id ocid1.cluster.oc1.iad.aaaaaaaaaf______jrd --from-json file://./cluster-enable-oidc.json
 ```
 
-If you want to confirm, run the following command:
+You might need to wait a few moments. If you want to confirm, run the following command:
 
 ```
 oci ce cluster get --cluster-id ocid1.cluster.oc1.iad.aaaaaaaaaf______jrd  | grep -C 'open-id-connect-discovery'
