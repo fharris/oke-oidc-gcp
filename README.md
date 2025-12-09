@@ -54,7 +54,6 @@ oci ce cluster get --cluster-id ocid1.cluster.oc1.iad.aaaaaaaaaf______jrd  | gre
 
 You should see something like the image below:
 
-<img width="1557" height="370" alt="image" src="https://github.com/user-attachments/assets/fa219535-901a481f93c1-f03fd59be68c" />
 
 <img width="1557" height="370" alt="image" src="https://github.com/user-attachments/assets/6a2eb2c3-f8e0-48c3-8fdb-f1abad078cea" />
 
