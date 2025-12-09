@@ -18,7 +18,7 @@ At a high level, when you enable OIDC Discovery for a cluster, the application's
 First thing to acknowledge is that we will need to prepare an OKE cluster with OIDC Discovery enabled and a GCP project with resources to be accessed by workloads in OKE. Lets see how to do this step by step.
 
 
-## Prepare OKE to support OIDC Discovery
+## 1. Prepare OKE to support OIDC Discovery
 
 In the OKE Documentation you can see how to create a cluster with OIDC Discovery enabled. But you can also provision a cluster without it and update it once is provisioned. 
 
