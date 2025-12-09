@@ -81,6 +81,8 @@ We will try to run the commands with GCP CLI, but you can always try to do it in
    gcloud projects create oke-oidc-gcp;
 ```
 
+Retain the PROJECT_NUMBER.
+
 ## 2. Enable the IAM, Resource Manager, Service Account Credentials, and Security Token Service APIs.
 
    Dont forget verifing that billing is enabled for your oke-oidc-gcp Google Cloud project.
@@ -129,7 +131,7 @@ gcloud iam workload-identity-pools create "oke-pool" \
 gcloud iam workload-identity-pools providers create-oidc "oke-provider" \
   --location="global" \
   --workload-identity-pool="oke-pool" \
-  --issuer-uri="https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/id9y6mi8tcky/b/oidc/o/42180282-ab82-48c3-bf01-5faea66725c4" \
+  --issuer-uri="https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/xxxxxxxx/x/oidc/o/12345678-ab44-45c2-bg02-1234354555f4" \
   --attribute-mapping="google.subject=assertion.sub"
 ```
 
@@ -160,7 +162,7 @@ This command grants a specific Kubernetes service account (created in point 1.2 
 gcloud iam service-accounts add-iam-policy-binding \
   oke-workload-sa@oke-oidc-gcp.iam.gserviceaccount.com \
   --role="roles/iam.workloadIdentityUser" \
-  --member=principal://iam.googleapis.com/projects/647206516842/locations/global/workloadIdentityPools/oke-pool/subject/system:serviceaccount:oke-gcp-ns:oke-gcp-sa \
+  --member=principal://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/oke-pool/subject/system:serviceaccount:oke-gcp-ns:oke-gcp-sa \
   --condition=None
 ```
 
@@ -170,7 +172,7 @@ Now, to deploy a Kubernetes workload that can access Google Cloud resources , we
 
 ```
 gcloud iam workload-identity-pools create-cred-config \
-    projects/647206516842/locations/global/workloadIdentityPools/oke-pool/providers/oke-provider \
+    projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/oke-pool/providers/oke-provider \
     --service-account=oke-workload-sa@oke-oidc-gcp.iam.gserviceaccount.com \
     --credential-source-file=/var/run/service-account/token \
     --credential-source-type=text \
@@ -231,7 +233,7 @@ spec:
     projected:
       sources:
       - serviceAccountToken:
-          audience: https://iam.googleapis.com/projects/647206516842/locations/global/workloadIdentityPools/oke-pool/providers/oke-provider
+          audience: https://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/oke-pool/providers/oke-provider
           expirationSeconds: 3600
           path: token
   - name: workload-identity-credential-configuration
