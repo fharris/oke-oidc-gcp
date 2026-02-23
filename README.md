@@ -135,7 +135,7 @@ gcloud iam service-accounts create oke-workload-sa \
   --display-name="OKE Workload Service Account"
 ```
 
-### - Objective Viewer role for Service Account
+### - Object Viewer role for Service Account
 
 The following command grants the service account named oke-workload-sa the Storage Object Viewer role on the entire oke-oidc-gcp project.
 We should be able to view buckets and list their files:
