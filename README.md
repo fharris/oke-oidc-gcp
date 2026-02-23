@@ -24,6 +24,8 @@ Create a JSON file cluster-enable-oidc.json :
       "isOpenIdConnectDiscoveryEnabled": true
     }
   }
+}
+
 ```
 
 and run the following command:
