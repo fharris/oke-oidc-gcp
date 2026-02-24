@@ -67,10 +67,11 @@ We will try to run the commands with GCP CLI, but you can always try to do it in
 
 ## 1. create a GCP project
 
-GCP recommends to use a dedicated project to manage workload identity pools and providers, so lets create a GCP project :
+GCP recommends to use a dedicated project to manage workload identity pools and providers, so lets create a GCP project. In the next steps
+replace PROJECT_NAME with the name of your project:
 
 ```
-   gcloud projects create oke-oidc-gcp;
+   gcloud projects create PROJECT_NAME;
 ```
 
 Retain the PROJECT_NUMBER.
@@ -80,13 +81,13 @@ Retain the PROJECT_NUMBER.
    Dont forget verifing that billing is enabled for your oke-oidc-gcp Google Cloud project.
 
 ```
-   gcloud billing projects link oke-oidc-gcp --billing-account=MY-BILLING-ACCOUNT-ID
+   gcloud billing projects link PROJECT_NAME --billing-account=MY-BILLING-ACCOUNT-ID
 
 ```
 Once done you can validate it:
 
 ```
-gcloud billing projects describe oke-oidc-gcp
+gcloud billing projects describe PROJECT_NAME
 ```
 
 <img width="738" height="102" alt="image" src="https://github.com/user-attachments/assets/5d3baae7-79ec-4182-a8ad-9f41c73a488a" />
@@ -141,18 +142,18 @@ The following command grants the service account named oke-workload-sa the Stora
 We should be able to view buckets and list their files:
 
 ```
-  gcloud projects add-iam-policy-binding projects/oke-oidc-gcp \
-  --member="serviceAccount:oke-workload-sa@oke-oidc-gcp.iam.gserviceaccount.com" \
+  gcloud projects add-iam-policy-binding projects/PROJECT_NAME \
+  --member="serviceAccount:oke-workload-sa@PROJECT_NAME.iam.gserviceaccount.com" \
   --role="roles/storage.objectViewer"
 ```
 
 ### - workloadIdentityUser role for Service Account
 
-This command grants a specific Kubernetes service account (created in point 1.2 and identified by its unique Workload Identity Pool member string) the permission to impersonate a particular Google Cloud service account ( oke-workload-sa@oke-oidc-gcp.iam.gserviceaccount.com ). The role granted, roles/iam.workloadIdentityUser , is specifically designed for this impersonation, allowing applications running in the Kubernetes cluster using the oke-gcp-sa service account,) to effectively "act as" the Google Cloud service account and access Google Cloud resources based on the Google Cloud service account's permissions, without needing traditional service account keys. 
+This command grants a specific Kubernetes service account (created in point 1.2 and identified by its unique Workload Identity Pool member string) the permission to impersonate a particular Google Cloud service account ( oke-workload-sa@PROJECT_NAME.iam.gserviceaccount.com ). The role granted, roles/iam.workloadIdentityUser , is specifically designed for this impersonation, allowing applications running in the Kubernetes cluster using the oke-gcp-sa service account,) to effectively "act as" the Google Cloud service account and access Google Cloud resources based on the Google Cloud service account's permissions, without needing traditional service account keys. 
 
 ```
 gcloud iam service-accounts add-iam-policy-binding \
-  oke-workload-sa@oke-oidc-gcp.iam.gserviceaccount.com \
+  oke-workload-sa@PROJECT_NAME.iam.gserviceaccount.com \
   --role="roles/iam.workloadIdentityUser" \
   --member=principal://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/oke-pool/subject/system:serviceaccount:oke-gcp-ns:oke-gcp-sa \
   --condition=None
@@ -165,7 +166,7 @@ Now, to deploy a Kubernetes workload that can access Google Cloud resources , we
 ```
 gcloud iam workload-identity-pools create-cred-config \
     projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/oke-pool/providers/oke-provider \
-    --service-account=oke-workload-sa@oke-oidc-gcp.iam.gserviceaccount.com \
+    --service-account=oke-workload-sa@PROJECT_NAME.iam.gserviceaccount.com \
     --credential-source-file=/var/run/service-account/token \
     --credential-source-type=text \
     --sts-location=global \
@@ -178,7 +179,7 @@ Now, lets create some resources in GCP:
 
 ```
 gcloud storage buckets create gs://oke-gcp-bucket ;
-echo "File Content" | gcloud storage cp - gs://oke-gcp-bucket/file.txt ;
+echo "Hello OKE!" | gcloud storage cp - gs://oke-gcp-bucket/file.txt ;
 ```
 
 # 3 - Testing
