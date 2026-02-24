@@ -93,7 +93,11 @@ gcloud billing projects describe PROJECT_NAME
 
 <img width="738" height="102" alt="image" src="https://github.com/user-attachments/assets/5d3baae7-79ec-4182-a8ad-9f41c73a488a" />
 
+## 2.1 Use the project you created in the shell
 
+```
+gcloud config set project PROJECT_ID
+```
 
 ## 3.  Enable APIs for your project
 
