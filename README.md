@@ -213,7 +213,7 @@ metadata:
 spec:
   containers:
   - name: oke-gcp-container
-    image: google/cloud-sdk:alpine
+    image: docker.io/google/cloud-sdk:alpine
     command: ["/bin/sh", "-c", "gcloud auth login --cred-file $GOOGLE_APPLICATION_CREDENTIALS && gcloud auth list && sleep 600"]
     volumeMounts:
     - name: token
