@@ -75,7 +75,7 @@ replace PROJECT_NAME with the name of your project:
    gcloud projects describe PROJECT_NAME;
 ```
 
-Retain the PROJECT_NUMBER.
+Retain the PROJECT_NUMBER and PROJECT_ID.
 
 ## 2. enable billing for the project
 
