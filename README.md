@@ -72,6 +72,7 @@ replace PROJECT_NAME with the name of your project:
 
 ```
    gcloud projects create PROJECT_NAME;
+   gcloud projects describe PROJECT_NAME;
 ```
 
 Retain the PROJECT_NUMBER.
